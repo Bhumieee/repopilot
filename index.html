@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Understand any public GitHub project faster with RepoPilot's interactive repository explorer.">
+  <title>RepoPilot — Understand any repository</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#home" aria-label="RepoPilot home">
+      <span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 24V8h5l4 6 4-6h5v16h-5v-8l-4 5-4-5v8z"/></svg></span>
+      <span>repo<span class="brand-accent">pilot</span></span>
+    </a>
+    <nav class="top-nav" aria-label="Main navigation">
+      <a href="#workspace">Explorer</a>
+      <a href="#understand">Understand</a>
+      <a href="#dna">Project DNA</a>
+    </nav>
+    <a class="github-link" href="https://github.com" target="_blank" rel="noreferrer">GitHub <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse-dot"></span> YOUR REPOSITORY, DECODED</div>
+        <h1>Understand any<br>GitHub project, <span>faster.</span></h1>
+        <p>Explore the files, follow the structure, and get a clearer picture of how a project fits together — all in one place.</p>
+        <a class="hero-link" href="#analyzer">Explore a repository <span aria-hidden="true">↓</span></a>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="art-center"><span class="art-mark">R</span><span class="art-label">REPOSITORY</span></div>
+        <div class="orbit-node node-a"><span>JS</span></div>
+        <div class="orbit-node node-b"><span>{ }</span></div>
+        <div class="orbit-node node-c"><span>⌘</span></div>
+        <div class="orbit-node node-d"><span>md</span></div>
+        <div class="art-caption">A clearer view of what's inside</div>
+      </div>
+    </section>
+
+    <section class="analyzer-section" id="analyzer">
+      <div class="section-heading">
+        <div><span class="section-kicker">01 / GET STARTED</span><h2>Bring a repository into focus.</h2></div>
+        <span class="public-badge"><span aria-hidden="true">◉</span> Public repositories</span>
+      </div>
+      <form class="analyzer-form" id="analyzer-form">
+        <label class="sr-only" for="repo-url">GitHub repository URL</label>
+        <span class="input-icon" aria-hidden="true">↗</span>
+        <input id="repo-url" type="url" autocomplete="url" placeholder="https://github.com/owner/repository" required>
+        <button class="primary-button" id="analyze-button" type="submit"><span>Analyze repository</span><span aria-hidden="true">→</span></button>
+      </form>
+      <div class="form-meta"><span>Paste a public GitHub repository URL to get started.</span><span>Private repositories need a secure backend and authentication.</span></div>
+      <div class="status-message" id="status-message" role="status" aria-live="polite" hidden></div>
+    </section>
+
+    <section class="dashboard" id="workspace" hidden>
+      <div class="repo-header">
+        <div class="repo-identity">
+          <div class="repo-avatar" id="repo-avatar" aria-hidden="true">R</div>
+          <div><div class="repo-owner" id="repo-owner"></div><h2 id="repo-name">Repository</h2></div>
+          <span class="repo-visibility"><span></span> Public</span>
+        </div>
+        <a class="outline-button" id="repo-github-link" href="#" target="_blank" rel="noreferrer">Open on GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+      <p class="repo-description" id="repo-description"></p>
+      <div class="stats-grid">
+        <article class="stat-card"><span class="stat-label">TOTAL FILES</span><strong id="stat-files">—</strong><span class="stat-foot" id="stat-size">across the repository</span></article>
+        <article class="stat-card"><span class="stat-label">PRIMARY LANGUAGE</span><strong id="stat-language">—</strong><span class="stat-foot">detected by GitHub</span></article>
+        <article class="stat-card"><span class="stat-label">DEFAULT BRANCH</span><strong id="stat-branch">—</strong><span class="stat-foot">repository default</span></article>
+        <article class="stat-card"><span class="stat-label">LAST UPDATED</span><strong id="stat-updated">—</strong><span class="stat-foot">most recent activity</span></article>
+      </div>
+
+      <div class="workspace-grid">
+        <aside class="explorer panel">
+          <div class="panel-heading"><div><span class="section-kicker">BROWSE</span><h3>Project explorer</h3></div><span class="file-count" id="explorer-count"></span></div>
+          <label class="search-box"><span aria-hidden="true">⌕</span><input id="file-search" type="search" placeholder="Find a file..." aria-label="Search files"><kbd>/</kbd></label>
+          <div class="quick-filters" aria-label="Filter files by type">
+            <button type="button" class="filter-chip active" data-filter="all">All</button>
+            <button type="button" class="filter-chip" data-filter="html">HTML</button>
+            <button type="button" class="filter-chip" data-filter="css">CSS</button>
+            <button type="button" class="filter-chip" data-filter="javascript">JS</button>
+            <button type="button" class="filter-chip" data-filter="images">Images</button>
+            <button type="button" class="filter-chip" data-filter="documentation">Docs</button>
+          </div>
+          <div class="tree-container" id="file-tree" aria-label="Repository files"></div>
+        </aside>
+
+        <section class="reader panel" aria-label="File reader">
+          <div class="reader-heading">
+            <div class="breadcrumb" id="file-breadcrumb"><span>◇</span><span>Select a file to explore</span></div>
+            <button class="copy-button" id="copy-code" type="button" disabled><span aria-hidden="true">▢</span> Copy code</button>
+          </div>
+          <div class="reader-empty" id="reader-empty">
+            <div class="empty-icon" aria-hidden="true">⌘</div>
+            <h3>Your project, one file at a time.</h3>
+            <p>Select a file from the explorer to read its source. Use the filters or search to find what you need.</p>
+            <span class="empty-hint">SOURCE CODE &nbsp;·&nbsp; PROJECT FILES &nbsp;·&nbsp; README</span>
+          </div>
+          <div class="code-area" id="code-area" hidden>
+            <div class="code-toolbar">
+              <span id="file-meta"></span>
+              <div class="code-search">
+                <input id="code-search-input" type="search" placeholder="Find in file" aria-label="Search current file">
+                <span id="code-search-count">0 / 0</span>
+                <button type="button" id="code-search-prev" aria-label="Previous match">↑</button>
+                <button type="button" id="code-search-next" aria-label="Next match">↓</button>
+              </div>
+            </div>
+            <div class="code-scroll" id="code-scroll" tabindex="0"><table class="code-table"><tbody id="code-lines"></tbody></table></div>
+          </div>
+          <div class="file-preview" id="file-preview" hidden></div>
+        </section>
+      </div>
+
+      <div class="lower-grid">
+        <section class="panel overview-panel" id="overview">
+          <div class="panel-heading"><div><span class="section-kicker">REPOSITORY NOTES</span><h3>At a glance</h3></div><span class="verified-label"><span></span> Verified data</span></div>
+          <div class="overview-content">
+            <div class="overview-block"><h4>About this project</h4><p id="overview-description"></p><div class="repo-facts" id="repo-facts"></div></div>
+            <div class="overview-block"><h4>README preview</h4><div class="readme-preview" id="readme-preview"><span class="muted-copy">README not found in this repository.</span></div></div>
+          </div>
+          <div class="language-section"><h4>Languages <span>GitHub's byte-based breakdown</span></h4><div class="language-bar" id="language-bar"></div><div class="language-legend" id="language-legend"></div></div>
+        </section>
+
+        <section class="panel understand-panel" id="understand">
+          <div class="panel-heading"><div><span class="section-kicker">02 / MAKE SENSE OF IT</span><h3>Understand my project</h3></div><span class="inferred-label">Inferred from files</span></div>
+          <p class="section-intro">A quick, rules-based reading of the repository. These observations are inferred from names and file contents — not AI-generated or guaranteed.</p>
+          <div class="insight-list" id="insight-list"></div>
+        </section>
+      </div>
+
+      <section class="panel dna-panel" id="dna">
+        <div class="panel-heading"><div><span class="section-kicker">03 / SEE THE WHOLE PICTURE</span><h3>Project DNA</h3></div><span class="inferred-label">Built from repository files</span></div>
+        <p class="section-intro">A visual snapshot of the project's file composition and folder hierarchy.</p>
+        <div class="dna-grid">
+          <div class="dna-card"><div class="dna-card-title"><h4>File types</h4><span id="file-type-total"></span></div><div class="type-chart" id="type-chart"></div></div>
+          <div class="dna-card"><div class="dna-card-title"><h4>Folder hierarchy</h4><span>top-level directories</span></div><div class="folder-chart" id="folder-chart"></div></div>
+          <div class="dna-card dna-language-card"><div class="dna-card-title"><h4>Language mix</h4><span>by source file count</span></div><div class="language-chart" id="dna-language-chart"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <section class="about-section" id="about">
+      <div><span class="section-kicker">A BETTER WAY TO ONBOARD</span><h2>First day on a new codebase?<br><span>Start with the map.</span></h2></div>
+      <p>RepoPilot brings a public repository's structure, source files, and project signals together in one readable workspace. It helps you orient yourself before you dive into the details — without asking you to trust a black box.</p>
+    </section>
+  </main>
+  <footer class="footer"><a class="brand footer-brand" href="#home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 32 32"><path d="M7 24V8h5l4 6 4-6h5v16h-5v-8l-4 5-4-5v8z"/></svg></span><span>repo<span class="brand-accent">pilot</span></span></a><span>Made for curious developers.</span><a href="#analyzer">Analyze a repository ↑</a></footer>
+</body>
+</html>
